@@ -90,7 +90,7 @@
             </div>
         </div>
     
-        {% block content %} {% endblock content %}
+         <div class="content-block">{% block content %} {% endblock content %}</div>
     </div>
     <!-- End page content -->
 
@@ -98,8 +98,8 @@
     <!-- Footer -->
     <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div id="footer" class="container-fluid text-muted">
-            <div style="font-size: .8em;"><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a> This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</div>
-            
+            <div style="font-size: .8em;"><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a> Works published here are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</div>
+        
             Web application programming and design: Richard Medina - Site maintained by the <a href="https://clt.manoa.hawaii.edu" target="_blank">Center for Language & Technology</a>, University of Hawai‘i at Mānoa 
             {% if user.is_authenticated %}
                 <a href="{% url 'logout_user' %}"><i class="fa fa-unlock"></i></a>

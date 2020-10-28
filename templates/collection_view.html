@@ -26,7 +26,7 @@
 								<p class="small">{% for j in doc.1%} <em>{{ j }}{% if not forloop.last %}; {% endif %}</em> {% endfor %}</p>
 							</a>
 						</div>
-						<div class="col-md-1"></div>
+						<div class="col-md-1 {% if sub_type %}col-md-push-1{% endif %}"><em>{{ doc.3 }}</em></div>
 					</div>
 				{% endfor %}
 			{% endfor %}
@@ -50,8 +50,8 @@
 			{% endfor %}
 		</div>
 		<div class="col-md-6">
-			{% if toc.Column %}<h4 class="border-space">Columns</h4>{% endif %}
-			{% for sub_type, data in toc.Column.items %} 
+			{% if toc.Report %}<h4 class="border-space">Reports</h4>{% endif %}
+			{% for sub_type, data in toc.Report.items %} 
 				<strong>{{ sub_type }}</strong>
 				<p class="small">{% if data.editors %}Edited by{% endif %} {% for j in data.editors%} <em>{{ j }}{% if not forloop.last %}; {% endif %}</em> {% endfor %}</p>
 				{% for doc in data.records %}

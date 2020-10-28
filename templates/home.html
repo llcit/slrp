@@ -38,7 +38,7 @@
 									<p class="small">{% for j in doc.1%} <em>{{ j }}{% if not forloop.last %}; {% endif %}</em> {% endfor %}</p>
 								</a>
 							</div>
-							<div class="col-md-1"></div>
+							<div class="col-md-1 {% if sub_type %}col-md-push-1{% endif %}"><em>{{ doc.3 }}</em></div>
 						</div>
 					{% endfor %}
 				{% endfor %}
@@ -47,6 +47,7 @@
 				{% for sub_type, data in toc.Article.items %} 
 					<strong>{{ sub_type }}</strong>
 					<p class="small">{% if data.editors %}Edited by{% endif %} {% for j in data.editors%} <em>{{ j }}{% if not forloop.last %}; {% endif %}</em> {% endfor %}</p>
+
 					{% for doc in data.records %}
 						<div class="row">
 							<div class="{% if sub_type %}col-md-9 col-md-offset-1 {% else %}col-md-11{% endif %}"> 
@@ -79,9 +80,9 @@
 				{% endfor %}
 
 
-			
-				{% if toc.Review %}<h4 class="border-space">Reviews</h4>{% endif %}
-				{% for sub_type, data in toc.Review.items %}
+				
+				{% if toc.Special %}<h4 class="border-space">Special</h4>{% endif %}
+				{% for sub_type, data in toc.Special.items %}
 					<strong>{{ sub_type }}</strong>
 					<p class="small">{% if data.editors %}Edited by{% endif %} {% for j in data.editors%} <em>{{ j }}{% if not forloop.last %}; {% endif %}</em> {% endfor %}</p>
 					{% for doc in data.records %}
