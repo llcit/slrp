@@ -12,7 +12,7 @@ body {
 }
 
 .byline {
-  padding-top: 20px;
+  margin-top: 20px;
 }
 
 .container-fluid {
@@ -44,7 +44,7 @@ dt.metadata {
 
 .navbar-fixed-top {
   background-color: #fff;
-  height: 150px;
+  min-height: 120px;
   border-bottom: 0px solid black;
 }
 
