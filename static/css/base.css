@@ -11,9 +11,22 @@ body {
   font-weight: 400;
 }
 
+.byline {
+  padding-top: 20px;
+}
+
 .container-fluid {
   max-width: 1250px;
 }
+
+.content-block {
+  margin-bottom: 30px;
+}
+
+#prev_issues {
+  padding-bottom: 30px;  
+}
+
 .static_a_display:link {color: #666; text-decoration: none;}
 .static_a_display:visited {color: #666; text-decoration: none;}
 .static_a_display:hover {color: #000; text-decoration: none; background-color: #e8eaed;}
@@ -31,8 +44,8 @@ dt.metadata {
 
 .navbar-fixed-top {
   background-color: #fff;
-  height: 100px;
-  border-bottom: 0px solid black ;
+  height: 150px;
+  border-bottom: 0px solid black;
 }
 
 .navbar-fixed-bottom {
@@ -40,7 +53,7 @@ dt.metadata {
   border-top: solid 1px #ccc;
 }
 
-#footer { padding-top: 16px; text-align: center;}
+#footer { margin-top: 20px; padding-top: 0px; text-align: center;}
 
 .table-borderless td,
 .table-borderless th
