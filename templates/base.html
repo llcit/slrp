@@ -40,18 +40,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                
-                <ul class="nav navbar-nav">
-                    <li><a class="navbar-brand" href="{% url 'home' %}"><img height="70px" style="margin-top: 0px; margin-left:15px" src="{% static 'img/slrp-lockup-.png' %}"></a></li>
-                    <li>
-                        <h2>Second Language Research & Practice </h2>
-                        <p style="width: 480px"><i>A refereed journal of the AAUSC addressing postsecondary language education from theoretical, empirical, and practical perspectives</i></p>
-                    </li>  
-                </ul>
+                <a class="navbar-brand" href="{% url 'home' %}"><img height="70px" style="margin-top: 0px; margin-left:15px" src="{% static 'img/slrp-lockup-.png' %}"></a>
             </div>
 
             <div class="collapse navbar-collapse" id="main-menu" style="background-color: #fff">
-
+                <ul class="nav navbar-nav">                    
+                    <li>
+                        <h2>Second Language Research & Practice </h2>
+                        <h5><i>A refereed journal of the AAUSC addressing postsecondary <br>language education from theoretical, empirical, and practical perspectives</i></h5>
+                    </li>  
+                </ul>
 
                 <form class="navbar-form navbar-right" method="get" action="{% url 'haystack_search' %}">
                     <div class="form-group">
