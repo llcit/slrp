@@ -18,7 +18,7 @@
 		{% endfor %}
 		</ul>
 		<hr>
-		<h3 lass="border-space">Previous Issues from <i>Issues in Language Program Direction</i></h3>
+		<h3 lass="border-space">Previous Volumes From <i>Issues in Language Program Direction</i></h3>
 		<ul class="list-unstyled">
 		{% for num, volume in bk_volumes.items %}
 			<li><p>{{num}} <a href="{% url 'collection' volume.0.identifier %}">{{ volume.0.name|slice:"5:"}}</a></p></li>			
