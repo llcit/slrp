@@ -131,6 +131,20 @@
 		</div>
 	{% endfor %}					
 </div>
+<!-- ROW 4 BACK ISSUES -->
+<div class="row">
+	<div class="col-md-12">
+		<h3 class="border-space">Previous Issues from <i>Issues in Language Program Direction</i><a href="{% url 'previous_issues' %}" class="btn btn-small btn-link static_a_display">view all</a></h3>		
+	</div>			
+
+	{% for num, volume in bk_volumes.items %}
+		<div class="col-md-3">
+			<ul id="" class="list-unstyled">
+				<li><p><a href="{% url 'collection' volume.0.identifier %}" class="static_a_display">{{ volume.0.name|slice:":4" }}</a></p></li>			
+			</ul>
+		</div>
+	{% endfor %}					
+</div>
 	
 {% endblock content %}
 		

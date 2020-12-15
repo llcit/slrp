@@ -30,12 +30,22 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        journal = Community.objects.all()[0]
-        context['keywords'] =  journal.aggregate_keywords()
-        context['volumes'] = journal.list_collections_by_volume()
-        context['latest'] = Collection.objects.all().order_by('-name')[0]
-        context['title'] = context['latest'].title_tuple()
-        context['toc'] = context['latest'].list_toc_by_page()
+        try: 
+            journal = Community.objects.all()[0]
+            context['keywords'] =  journal.aggregate_keywords()
+            context['volumes'] = journal.list_collections_by_volume()
+            context['latest'] = Collection.objects.all().order_by('-name')[0]
+            context['title'] = context['latest'].title_tuple()
+            context['toc'] = context['latest'].list_toc_by_page()
+        except:
+            pass
+        
+        try:
+            journal_2 = Community.objects.all()[1] # Back issues from previous journal
+            context['bk_volumes'] = journal_2.list_collections_by_volume()
+        except:
+            context['bk_volumes'] = None 
+
         try:
             context['impact_factor'] = ImpactFactor.objects.get()
         except:
@@ -48,10 +58,21 @@ class PreviousIssuesView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PreviousIssuesView, self).get_context_data(**kwargs)
-        journal = Community.objects.all()[0]
-        context['volumes'] = journal.list_collections_by_volume()
-        context['latest'] = [(vol, vol.list_records()) for vol in Collection.objects.all().order_by('-name')][0]
+        try:
+            journal = Community.objects.all()[0]
+            context['volumes'] = journal.list_collections_by_volume()
+            context['latest'] = [(vol, vol.list_records()) for vol in Collection.objects.all().order_by('-name')][0]
+        except:
+            pass
+
+        try:
+            journal_2 = Community.objects.all()[1] # Back issues from previous journal
+            context['bk_volumes'] = journal_2.list_collections_by_volume()
+        except:
+            context['bk_volumes'] = None
+            
         context['curr_page'] = 'previous_issues'
+
         return context
 
 
