@@ -13,9 +13,7 @@
 			<li>
 				<h4><i class="fa fa-caret-right"></i> {{ volume.0.name|slice:":9"}}</h4>
 				<ul class="list-unstyled">
-				{% for j in volume %}
-					<li><p><a href="{% url 'collection' j.identifier %}">{{ j.name }}</a></p></li>
-				{% endfor %}
+					<li><p><a href="{% url 'collection' volume.0.identifier %}">{{ volume.0.name }}</a></p></li>
 				</ul>
 			</li>
 		{% endfor %}
@@ -25,7 +23,6 @@
 		<ul class="list-unstyled">
 		{% for num, volume in bk_volumes.items %}
 			<li><p>{{num}} <a href="{% url 'collection' volume.0.identifier %}">{{ volume.0.name|slice:"5:"}}</a></p></li>			
-			</ul>
 		{% endfor %}
 		</ul>			
 	</div>
