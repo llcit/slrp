@@ -197,6 +197,22 @@ def download_full_text_files(data_dir=None):
     with open(os.path.join(data_dir, 'bitstream_path_errors.json'), 'w') as ferror:
         ferror.write(json.dumps(path_errs, indent=2))
 
+def export_records(community_obj):
+    collections = community_obj.list_collections()
+    data_rows = []
+    for i in collections:
+        recs = i.list_records()
+        for r in recs:
+            rd = r.as_dict()
+            try:
+                desc = rd['description.abstract'][0]
+            except:
+                desc = ''
+            d = (rd['volume'][0], rd['identifier.uri'][0], rd['title'][0], rd['startingpage'][0], rd['endingpage'][0], desc )
+            data_rows.append(d)
+
+    return data_rows
+
 class LltRecord(Record):
     """ XML Record handler override for dim metadata format. """    
     def __init__(self, record_element, strip_ns=True):
