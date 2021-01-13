@@ -18,7 +18,8 @@
 
 			{% for sub_type, data in toc.Preface.items %} 
 				
-				{% for doc in data.records %}
+				{% for doc in data.records|dictsort:1 %}
+
 					<div class="row">
 						<div class="col-md-11"> 
 							<a href="{{ doc.0.get_absolute_url }}" class="static_a_display">
@@ -26,7 +27,7 @@
 								<p class="small">{% for j in doc.1%} <em>{{ j }}{% if not forloop.last %}; {% endif %}</em> {% endfor %}</p>
 							</a>
 						</div>
-						<div class="col-md-1 {% if sub_type %}col-md-push-1{% endif %}"><em>{{ doc.3 }}</em></div>
+						<div class="col-md-1 {% if sub_type %}col-md-push-1{% endif %}"><em></em></div>
 					</div>
 				{% endfor %}
 			{% endfor %}
