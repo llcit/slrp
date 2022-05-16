@@ -19,10 +19,7 @@
 	<!-- LEFT PANEL -->
 	<div class="col-md-9">
 		<div class="row">
-			<div class="col-md-12" style="background-color: #D4E157; color: #455A64; margin: 10px; padding: 10px 10px 10px 10px;">
-				<h3>Call for Papers</h3>
-				<p style="font-size: 14pt;">Volume 3 of SLRP will include a special reports section on decentering language programs. Submissions are due by January 15, 2022. <a href="{% url 'page_slug_view' 'call-for-papers' %}">Read more!</a></p>
-			</div>
+			
 			<div class="col-md-12">
 				<h3><a href="{% url 'collection' latest.identifier %}" class="static_a_display" style="color: #000">{{ title.0 }} <sup><span class="badge">newest</span></sup></a> {% if user.is_staff %}<small><a class="btn btn-xs btn-default" href="{% url 'oai_collection' latest.pk %}">Update</a></small>{% endif %}</h3>
 				<h4><strong>{{ title.1 }}</strong></h4>
