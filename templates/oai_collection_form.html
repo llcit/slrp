@@ -11,11 +11,13 @@
 	    <h5>{{ message }}</h5>
 	    {% endfor %}
 	{% endif %}
+	<p>
 	
 	<form action="" method="post">{% csrf_token %}
     	{{ form.as_p }}
 
     	<input type="submit" value="{{ view_type|title }}" />
 	</form>
+	</p>
 
 {% endblock content %}

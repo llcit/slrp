@@ -74,7 +74,6 @@ class CreateCollectionForm(ModelForm):
             
         super(CreateCollectionForm, self).__init__(*args, **kwargs)
         self.fields['identifier'] = forms.CharField(widget=forms.Select(choices=collections))
-        print(collections)
         self.fields['identifier'].label = 'Select Collection From ' + community.name + ':'
         self.fields['community'].initial = community
         self.fields['community'].label = community.name
