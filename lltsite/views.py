@@ -116,12 +116,49 @@ class ItemView(DetailView):
         context = super(ItemView, self).get_context_data(**kwargs)
         context['item_data'] = self.get_object().as_display_dict()
         bitstream = context['item_data']['bitstream'][0]
-        if not bitstream.startswith('https:'): 
-            bitstream = bitstream.replace('http://', 'https://', 1)
-        context['https_bitstream'] = bitstream
-        context['pdf_filename'] = bitstream[bitstream.rfind('/')+1:]
+        # PATCH to handle two different data structures in db (list or string)
+        #   related to introduced modification to collect bitstreams as la ist 
+        #   in utils/get_bitstream_url()
+
+
+        context['bitstreams'] = []
+        try:
+            if not isinstance(bitstream, list):
+                bitstream = [bitstream]    
+            
+            if bitstream:
+                for bit_url in bitstream:
+                    if not bit_url.startswith('https:'): 
+                        bit_url = bit_url.replace('http://', 'https://', 1)
+                    bit_url_name = bit_url[bit_url.rfind('/')+1:]
+                    context['bitstreams'].append((bit_url, bit_url_name))
+        except:
+            pass
+
+        # if bitstream:
+        #     if not bitstream.startswith('https:'): 
+        #         bitstream = bitstream.replace('http://', 'https://', 1)
+        #     context['https_bitstream'] = bitstream
+        #     context['pdf_filename'] = bitstream[bitstream.rfind('/')+1:]
+
+        context['bitstream_extras'] = []
+        try:
+            bitstream_extras = context['item_data']['bitstream_extra'][0]
+            for bit_url in bitstream_extras:
+                if not bit_url.startswith('https:'): 
+                    bit_url = bit_url.replace('http://', 'https://', 1)
+                bit_url_name = bit_url[bit_url.rfind('/')+1:]
+                context['bitstream_extras'].append((bit_url, bit_url_name))
+        except Exception as e:
+            pass
+        
+        # END PATCH
+
+
+
+
          
-    
+        # context['current_year'] = self.get_object().hdr_setSpec.get_collection_date()
         return context
 
 

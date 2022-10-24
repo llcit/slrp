@@ -50,22 +50,33 @@ def get_bitstream_url(collection, record_in):
     """ Harvests an href pointing to the bitstream urls for the record in repository.
     E.g., https://scholarspace.manoa.hawaii.edu/bitstream/10125/25006/1/editor.pdf
     """
-
-    sickle = Sickle(collection.community.repository.base_url)        
-    sickle.class_mapping['GetRecord'] = LltRecordBitstream
-    record = sickle.GetRecord(metadataPrefix='ore', identifier=record_in.header.identifier)
-    bitstreams = {'bitstream': None, 'bitstream_txt': None}
-
-    try:        
-        bitstreams['bitstream'] = record.metadata['bitstream'][0].replace('+', '%20')
+    bitstreams = {'bitstream': None, 'bitstream_txt': None, 'bitstream_extra': None}
+    try:
+        sickle = Sickle(collection.community.repository.base_url)        
+        sickle.class_mapping['GetRecord'] = LltRecordBitstream_v2
+        record = sickle.GetRecord(metadataPrefix='ore', identifier=record_in.header.identifier)
+        print (record.metadata)
+    except Exception as e:
+        print (e)
+        return bitstreams
+    
+    try:  
+        bitstreams['bitstream'] = record.metadata['bitstream']      
+        # bitstreams['bitstream'] = record.metadata['bitstream'][0].replace('+', '%20')
     except Exception as e:
         print (e, 'Unable to construct bitstream url for', record_in.header.identifier)
 
     try:
-        bitstreams['bitstream_txt'] = record.metadata['bitstream_txt'][0].replace('+', '%20')
+        bitstreams['bitstream_txt'] = record.metadata['bitstream_txt']
+        # bitstreams['bitstream_txt'] = record.metadata['bitstream_txt'][0].replace('+', '%20')
     except Exception as e:
         print (e, 'Unable to construct bitstream_txt url for', record_in.header.identifier)
     
+    try:
+        bitstreams['bitstream_extra'] = record.metadata['bitstream_extra']
+    except Exception as e:
+        print (e, 'Unable to construct bitstream_extra urls for', record_in.header.identifier)
+
     return bitstreams
 
 def batch_harvest_articles(collection_obj):
@@ -254,6 +265,50 @@ class LltRecordBitstream(Record):
         #     # if i.get('rel') == 'http://www.openarchives.org/ore/terms/aggregates':
             #     self.metadata = {'bitstream': [i.get('href')]}
 
+
+class LltRecordBitstream_v2(Record):
+    """ XML Record handler override for ore metadata prefix (format). Used to retrieve bitstream urls for a record."""    
+    def __init__(self, record_element, strip_ns=True):
+        super(LltRecordBitstream_v2, self).__init__(record_element, strip_ns=strip_ns)
+        self._oai_namespace = get_namespace(self.xml)
+        atom_ns = '{http://www.w3.org/2005/Atom}'
+        dc_ns = '{http://purl.org/dc/terms/}'
+        rdf_ns = '{http://www.w3.org/1999/02/22-rdf-syntax-ns#}'
+
+        tree = self.xml.find('.//' + self._oai_namespace + 'metadata').getchildren()[0]
+        
+        doc_urls = tree.findall('.//'+atom_ns+'link') # Retrieves file/url info for primary bitstreams
+        txt_urls = tree.findall('.//'+rdf_ns+'Description') # Retrieves file/url info for ocr'ed files
+
+        doc_bitstreams = [] # url for primary document/article pdf
+        txt_bitstreams = [] # url for ocr'ed pdf documents
+        extra_bitstreams = [] # urls for secondary data files.
+
+        for i in doc_urls:
+            link_type = i.get('rel')
+            if link_type == 'http://www.openarchives.org/ore/terms/aggregates':
+                href = i.get('href')
+                ftype = i.get('type')
+                ftitle = i.get('title')
+                # To do: determine if supplemental file based on 'supplemental' key
+                doc_bitstreams.append(href)
+
+        for i in txt_urls:
+            link_type = i.find(rdf_ns+'type').get(rdf_ns+'resource')
+            if link_type != 'http://www.dspace.org/objectModel/DSpaceItem':
+                href = i.get(rdf_ns+'about')
+                ftype = ''
+                try:
+                    ftype = i.find(dc_ns+'description').text
+                except Exception as e:
+                    pass
+                if ftype == 'TEXT':
+                    txt_bitstreams.append(href)
+
+        self.metadata.clear() # clear the metadata. we're only interested in fishing out the bitstream info.
+        self.metadata['bitstream'] = doc_bitstreams
+        self.metadata['bitstream_txt'] = txt_bitstreams
+        
 
 class OAIUtils(object):
     """ Provides an api for interacting with and harvesting from the 
