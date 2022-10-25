@@ -182,7 +182,7 @@ class OaiCollectionCreateView(CreateView):
                 form.instance.name = i[1]
                 break
         form.save()
-        return HttpResponseRedirect(reverse('oai_community', args=[str(self.community.identifier)]))        
+        return HttpResponseRedirect(reverse('oai_collection', args=[str(form.instance.identifier)]))        
 
     def get_success_url(self):
         success_url = reverse('oai_community', args=[str(self.community.identifier)])
