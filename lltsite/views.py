@@ -24,6 +24,10 @@ from .mixins import RecordSearchMixin
 from .forms import CreateSubscriberForm, UpdateImpactFactorForm, PageUpdateForm
 
 
+from django.contrib.syndication.views import Feed
+from django.urls import reverse
+
+
 class HomeView(TemplateView):
     template_name = 'home.html'
     queryset = None
@@ -325,5 +329,31 @@ class UpdateImpactFactorView(LoginRequiredMixin, UpdateView):
     template_name = 'impact_factor_update.html'
     form_class = UpdateImpactFactorForm
     success_url = reverse_lazy('home')   
+
+
+
+
+
+class LatestEntriesFeed(Feed):
+    title = "Second Language Research & Practice Publication Feed"
+    link = "/feed/"
+    description = "Updates when a new issue is published in the journal."
+
+    def items(self):
+        return Collection.objects.all().order_by('-name')[:1]
+
+    def item_title(self, item):
+        try:
+            return item.name
+        except:
+            return ''
+
+    def item_description(self, item):
+        try:
+            desc = str(item.count_records()) + ' new articles published on ' + item.get_publication_date()
+
+            return desc
+        except:
+            return ''
 
 

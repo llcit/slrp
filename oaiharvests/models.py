@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 from model_utils.models import TimeStampedModel
 from collections import OrderedDict, defaultdict
 
@@ -100,6 +101,16 @@ class Collection(TimeStampedModel):
             title = (a, b)
             
         return title
+
+    def get_publication_date(self):
+        try:
+            sample_rec = self.record_set.all()[0]
+            pdate = sample_rec.get_metadata_item('date.issued')[0][0];
+            return date.fromisoformat(pdate).strftime('%b %d %Y')
+
+        except Exeption as e:
+            print(e)
+            return ''
 
     def count_records(self):
         return self.record_set.all().count()

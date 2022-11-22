@@ -24,7 +24,8 @@ from lltsite.views import (
     SubscriberCreateView,
     SubscriberListView,
     SubscriberListCsvView,
-    UpdateImpactFactorView
+    UpdateImpactFactorView,
+    LatestEntriesFeed
 )
 
 from oaiharvests.views import (
@@ -150,6 +151,9 @@ urlpatterns = [
     url(r'^oaiharvester/collection/harvest/(?P<pk>\w+)$',
      OaiCollectionHarvestView.as_view(
      ), name='oai_harvest_collection'),
+
+
+    url(r'^feed/', LatestEntriesFeed()),
 
     url(r'^admin/filebrowser/', site.urls),
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
