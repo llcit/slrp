@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone, dateparse
@@ -92,7 +92,7 @@ class OaiCommunityCreateView(DetailView):
             form.save()
             return HttpResponseRedirect(reverse('oai_repository', args=[str(self.get_object().id)]))
 
-        return render_to_response('oai_community_add_form.html', {'form': form})
+        return render('oai_community_add_form.html', {'form': form})
         
 
     def get_context_data(self, **kwargs):

@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 
 admin.autodiscover()
 
-from filebrowser.sites import site
+# from filebrowser.sites import site
 
 
 from lltsite.views import (
@@ -155,8 +155,8 @@ urlpatterns = [
 
     url(r'^feed/', LatestEntriesFeed()),
 
-    url(r'^admin/filebrowser/', site.urls),
-    url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    # url(r'^admin/filebrowser/', site.urls),
+    # url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^admin/', admin.site.urls, name='index'),
 
     url(r'^login/$', auth_views.LoginView.as_view(), name='login_user'),
