@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from datetime import date
 from model_utils.models import TimeStampedModel
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict, defaultdict, namedtuple
 
 import json, operator, os, requests, io
 import pdb #pdb.set_trace()
@@ -176,8 +176,9 @@ class Collection(TimeStampedModel):
         for rec in self.list_records_by_page_and_volume():  # Returns a list of [ [REC OBJ, PAGE START, PAGE END, VOL NUM], ... ]
             rec_obj = rec[0]       # Record object
             rec_data = rec_obj.as_dict()  # Fetch the record data
-            # print rec, rec_data['type'], rec_data['llt.topic'] or None
+
             try:
+                print (rec_data['type'], rec, '\n')
                 for rec_type in rec_data['type']:
                     toc_item = [rec_obj, [], [], '']  # Set defaults (rec object, authors, abstract, start page)
                     
@@ -233,8 +234,70 @@ class Collection(TimeStampedModel):
                         
             except Exception as e:
                 pass  # record must not have a type specified so proceed quietly
-        
         return toc
+
+    def list_toc_by_page_subtype(self):
+        Section = namedtuple('Section', ['heading', 'subheading'])
+        Record = namedtuple('Record', ['editors', 'item'])
+        toc = defaultdict(list)
+        col_date = int(self.get_publication_date()[-4:])
+        for rec in self.list_records_by_page_and_volume():
+            rec_obj = rec[0]
+            rec_data = rec_obj.as_dict()
+            toc_item = [rec_obj, [], [], ''] # Set defaults (rec object, authors, abstract, start page)
+
+            try:
+                dc_type = rec_data['type'][0]
+                if not dc_type.endswith('s'): 
+                    dc_type = dc_type + 's'
+                slrp_type = rec_data['llt.topic'][0]
+                if col_date < 2024: # CASE: Publish Date before 2024
+                    section = Section(dc_type, rec_data['llt.topic'][0])
+                else:
+                    section = Section(slrp_type, '')
+            except:
+                section = Section(dc_type, '')
+
+            # Build author list 
+            try:
+                authors = rec_data['contributor.author'] # Pretty print author list (first, last)
+                authors = [k.split(',')[1] + ' ' + k.split(',')[0] for k in authors]
+                toc_item[1] = authors
+            except:
+                pass  # Problem parsing authors but default already set to empty.
+            
+            # Build editor list
+            try:
+                editors = rec_data['contributor.editor'] # Pretty print editor list (first last)
+                try:  # handle error related to metadata entry for first name, last name
+                    editors = [k.split(',')[1] + ' ' + k.split(',')[0] for k in editors]
+                except:
+                    pass
+            except Exception as e:
+                editors = []  # Problem parsing editors, set to empty. 
+
+            # Fetch page number from list if not zero
+            if rec[1]: toc_item[3] = rec[1]
+
+            record = Record(editors=editors, item=toc_item) 
+            toc[section].append(record) # This does the grouping through defaultdict        
+
+        # Recompile the data for toc display
+        tocd = defaultdict(list)
+        try:
+            for k, v in toc.items():
+                editor_list = []
+                for i in v:
+                    editor_list.extend(i.editors)
+                tocd[k.heading].append([k.subheading, list(set(editor_list)), v])
+        except Exception as e:
+            print(e)
+            pass
+            
+        return tocd
+
+
+
 
     def get_absolute_url(self):
        return reverse('collection', args=[str(self.identifier)])
