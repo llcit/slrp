@@ -40,19 +40,7 @@ class HomeView(TemplateView):
             context['volumes'] = journal.list_collections_by_volume()
             context['latest'] = Collection.objects.all().order_by('-name')[0]
             context['title'] = context['latest'].title_tuple()
-            toc_data = context['latest'].list_toc_by_page_subtype()
-            
-            # Build column layout as two separate lists
-            col_max = len(toc_data) // 2
-            toc_left = {}
-            toc_right = {}
-            for i, k in enumerate(toc_data.keys()):
-                if i > col_max:
-                    toc_right[k] = toc_data[k]
-                else:
-                    toc_left[k] = toc_data[k]            
-            context['toc_left'] = toc_left
-            context['toc_right'] = toc_right            
+            context['toc'] = context['latest'].list_toc_by_page()
         except:
             pass
         
@@ -118,21 +106,9 @@ class CollectionView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CollectionView, self).get_context_data(**kwargs)
+        context['toc'] = self.get_object().list_toc_by_page()
+        context['size'] = len(context['toc'])
         context['title'] = self.get_object().title_tuple()
-        toc_data = self.get_object().list_toc_by_page_subtype()
-            
-        # Build column layout as two separate lists
-        col_max = len(toc_data) // 2
-        toc_left = {}
-        toc_right = {}
-        for i, k in enumerate(toc_data.keys()):
-            if i > col_max:
-                toc_right[k] = toc_data[k]
-            else:
-                toc_left[k] = toc_data[k]            
-        context['toc_left'] = toc_left
-        context['toc_right'] = toc_right
-
         return context
 
 
