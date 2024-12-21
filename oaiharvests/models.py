@@ -108,7 +108,7 @@ class Collection(TimeStampedModel):
             pdate = sample_rec.get_metadata_item('date.issued')[0][0];
             return date.fromisoformat(pdate).strftime('%b %d %Y')
 
-        except Exeption as e:
+        except Exception as e:
             print(e)
             return ''
 
