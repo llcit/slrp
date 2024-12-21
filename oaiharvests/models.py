@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from datetime import date
+from datetime import date, datetime
 from model_utils.models import TimeStampedModel
 from collections import OrderedDict, defaultdict, namedtuple
 
@@ -104,13 +104,13 @@ class Collection(TimeStampedModel):
 
     def get_publication_date(self):
         try:
-            sample_rec = self.record_set.all()[0]
-            pdate = sample_rec.get_metadata_item('date.issued')[0][0];
-            return date.fromisoformat(pdate).strftime('%b %d %Y')
-
+            r = self.list_records()[0]
+            d = r.get_metadata_item('date.issued')[0][0]
+            d = datetime.strptime(d, '%Y-%m-%d')
+            return d.year
         except Exception as e:
             print(e)
-            return ''
+            return 0
 
     def count_records(self):
         return self.record_set.all().count()
@@ -240,7 +240,8 @@ class Collection(TimeStampedModel):
         Section = namedtuple('Section', ['heading', 'subheading'])
         Record = namedtuple('Record', ['editors', 'item'])
         toc = defaultdict(list)
-        col_date = int(self.get_publication_date()[-4:])
+        col_date = self.get_publication_date()
+       
         for rec in self.list_records_by_page_and_volume():
             rec_obj = rec[0]
             rec_data = rec_obj.as_dict()
